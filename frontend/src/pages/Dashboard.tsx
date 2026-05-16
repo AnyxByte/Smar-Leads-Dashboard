@@ -26,9 +26,6 @@ interface LeadFormData {
 }
 
 const PAGE_SIZE = 8;
-// ... (Keep SEED_LEADS, useDebounce, and exportCSV logic here unchanged) ...
-
-// ─── Seed data helper & array ────────────────────────────────────────────────
 
 function makeLead(
   id: string,
@@ -112,7 +109,6 @@ const SEED_LEADS: Lead[] = [
     18,
   ),
 ];
-
 
 function useDebounce<T>(value: T, delay = 400): T {
   const [dv, setDv] = useState(value);

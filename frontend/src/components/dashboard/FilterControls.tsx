@@ -1,13 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Search,
   Plus,
   FileDown,
@@ -15,9 +8,8 @@ import {
   ArrowUpDown,
   X,
 } from "lucide-react";
+import { DashboardSelect } from "./DashboardSelect";
 
-type LeadStatus = "New" | "Contacted" | "Qualified" | "Lost";
-type LeadSource = "Website" | "Instagram" | "Referral";
 type SortOrder = "latest" | "oldest";
 
 interface FilterControlsProps {
@@ -49,8 +41,31 @@ export function FilterControls({
   onAddLeadClick,
   isFiltered,
 }: FilterControlsProps) {
+  // Dynamic Array mappings for the dropdown menus
+  const statusOptions = [
+    { value: "All", label: "All statuses" },
+    ...["New", "Contacted", "Qualified", "Lost"].map((s) => ({
+      value: s,
+      label: s,
+    })),
+  ];
+
+  const sourceOptions = [
+    { value: "All", label: "All sources" },
+    ...["Website", "Instagram", "Referral"].map((s) => ({
+      value: s,
+      label: s,
+    })),
+  ];
+
+  const sortOptions = [
+    { value: "latest", label: "Latest" },
+    { value: "oldest", label: "Oldest" },
+  ];
+
   return (
     <div className="px-4 sm:px-6 py-4 border-b border-zinc-100 space-y-3">
+      {/* Title & Toolbar Actions Row */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-sm font-semibold text-zinc-900">All Leads</h2>
@@ -78,7 +93,9 @@ export function FilterControls({
         </div>
       </div>
 
+      {/* Inputs and Dropdowns Filtering Row */}
       <div className="flex items-center gap-2 flex-wrap">
+        {/* Text Input Search Engine */}
         <div className="relative flex-1 min-w-[160px] max-w-xs">
           <Search
             size={14}
@@ -100,51 +117,34 @@ export function FilterControls({
           )}
         </div>
 
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="h-9 w-[130px] text-sm">
-            <SlidersHorizontal
-              size={13}
-              className="mr-1 text-zinc-400 shrink-0"
-            />
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All statuses</SelectItem>
-            {["New", "Contacted", "Qualified", "Lost"].map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Reusable Status Filter */}
+        <DashboardSelect
+          value={statusFilter}
+          onValueChange={setStatusFilter}
+          options={statusOptions}
+          placeholder="Status"
+          widthClass="w-[180px]"
+          icon={<SlidersHorizontal size={13} />}
+        />
 
-        <Select value={sourceFilter} onValueChange={setSourceFilter}>
-          <SelectTrigger className="h-9 w-[130px] text-sm">
-            <SelectValue placeholder="Source" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All sources</SelectItem>
-            {["Website", "Instagram", "Referral"].map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Reusable Source Filter */}
+        <DashboardSelect
+          value={sourceFilter}
+          onValueChange={setSourceFilter}
+          options={sourceOptions}
+          placeholder="Source"
+          widthClass="w-[180px]"
+        />
 
-        <Select
+        {/* Reusable Sort Engine */}
+        <DashboardSelect
           value={sortOrder}
           onValueChange={(v) => setSortOrder(v as SortOrder)}
-        >
-          <SelectTrigger className="h-9 w-[120px] text-sm">
-            <ArrowUpDown size={13} className="mr-1 text-zinc-400 shrink-0" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="latest">Latest</SelectItem>
-            <SelectItem value="oldest">Oldest</SelectItem>
-          </SelectContent>
-        </Select>
+          options={sortOptions}
+          placeholder="Sort by"
+          widthClass="w-[130px]"
+          icon={<ArrowUpDown size={13} />}
+        />
       </div>
     </div>
   );

@@ -1,14 +1,8 @@
 import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Button } from "../ui/button";
+import { DashboardSelect } from "./DashboardSelect"; // Import your reusable dropdown module
 
 type LeadStatus = "New" | "Contacted" | "Qualified" | "Lost";
 type LeadSource = "Website" | "Instagram" | "Referral";
@@ -28,15 +22,13 @@ interface LeadFormData {
   status: LeadStatus;
   source: LeadSource;
 }
+
 interface ModalProps {
   open: boolean;
   onClose: () => void;
   onSave: (data: LeadFormData) => void;
   initial?: Lead | null;
 }
-
-const SOURCES: LeadSource[] = ["Website", "Instagram", "Referral"];
-const STATUSES: LeadStatus[] = ["New", "Contacted", "Qualified", "Lost"];
 
 export default function LeadModal({
   open,
@@ -52,6 +44,17 @@ export default function LeadModal({
   });
   const [errors, setErrors] = useState<Partial<LeadFormData>>({});
   const nameRef = useRef<HTMLInputElement>(null);
+
+  // Map option data arrays neatly for your reusable component structure
+  const statusOptions = ["New", "Contacted", "Qualified", "Lost"].map((s) => ({
+    value: s,
+    label: s,
+  }));
+
+  const sourceOptions = ["Website", "Instagram", "Referral"].map((s) => ({
+    value: s,
+    label: s,
+  }));
 
   useEffect(() => {
     if (open) {
@@ -94,9 +97,7 @@ export default function LeadModal({
               {initial ? "Edit lead" : "Create new lead"}
             </h2>
             <p className="text-xs text-zinc-400 mt-0.5">
-              {initial
-                ? "Update the lead details below."
-                : "Fill in the details to add a lead."}
+              {initial ? "Update the lead details below." : "Fill in the details to add a lead."}
             </p>
           </div>
           <button
@@ -109,9 +110,9 @@ export default function LeadModal({
 
         {/* Body */}
         <div className="px-6 py-5 space-y-4">
-          {/* Name */}
+          {/* Name Field */}
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
               Full name
             </label>
             <Input
@@ -119,93 +120,72 @@ export default function LeadModal({
               placeholder="e.g. Rahul Kumar"
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              className={
-                errors.name ? "border-red-400 focus-visible:ring-red-400" : ""
-              }
+              className={`rounded-xl border-zinc-200 h-10 ${
+                errors.name ? "border-red-400 focus-visible:ring-red-400" : "focus-visible:ring-violet-500"
+              }`}
             />
             {errors.name && (
-              <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+              <p className="text-xs text-red-500 mt-1 font-medium">{errors.name}</p>
             )}
           </div>
 
-          {/* Email */}
+          {/* Email Field */}
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
               Email address
             </label>
             <Input
               type="email"
               placeholder="e.g. rahul@example.com"
               value={form.email}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, email: e.target.value }))
-              }
-              className={
-                errors.email ? "border-red-400 focus-visible:ring-red-400" : ""
-              }
+              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+              className={`rounded-xl border-zinc-200 h-10 ${
+                errors.email ? "border-red-400 focus-visible:ring-red-400" : "focus-visible:ring-violet-500"
+              }`}
             />
             {errors.email && (
-              <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+              <p className="text-xs text-red-500 mt-1 font-medium">{errors.email}</p>
             )}
           </div>
 
-          {/* Status + Source */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+          {/* Reusable Select Matrix Row */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-zinc-700">
                 Status
               </label>
-              <Select
+              <DashboardSelect
                 value={form.status}
-                onValueChange={(v) =>
-                  setForm((f) => ({ ...f, status: v as LeadStatus }))
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUSES.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onValueChange={(v) => setForm((f) => ({ ...f, status: v as LeadStatus }))}
+                options={statusOptions}
+                widthClass="w-full" // Instruct component to expand fully to match grid columns
+                placeholder="Select status"
+              />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+            
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-zinc-700">
                 Source
               </label>
-              <Select
+              <DashboardSelect
                 value={form.source}
-                onValueChange={(v) =>
-                  setForm((f) => ({ ...f, source: v as LeadSource }))
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SOURCES.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onValueChange={(v) => setForm((f) => ({ ...f, source: v as LeadSource }))}
+                options={sourceOptions}
+                widthClass="w-full" // Instruct component to expand fully to match grid columns
+                placeholder="Select source"
+              />
             </div>
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer Actions */}
         <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-zinc-100">
-          <Button variant="outline" onClick={onClose} size="sm">
+          <Button variant="outline" onClick={onClose} size="sm" className="rounded-xl px-4 text-zinc-600">
             Cancel
           </Button>
           <Button
             size="sm"
-            className="bg-violet-600 hover:bg-violet-700 text-white"
+            className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-4 font-medium shadow-sm"
             onClick={handleSubmit}
           >
             {initial ? "Save changes" : "Create lead"}
