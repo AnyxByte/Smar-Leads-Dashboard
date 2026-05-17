@@ -113,7 +113,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
 
   const navigate = useNavigate();
 
-  const API_BASE_URL = (import.meta as any).env?.VITE_API_URL ?? "";
+  const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
   const passwordValue = watch("password", "");
 
