@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,7 +99,6 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
       toast.error("Google Auth execution cancelled or popup blocked."),
   });
 
-  // ─── GITHUB REDIRECT FLOW ──────────────────────────────────────────────────
   const handleGitHubLogin = () => {
     const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
     if (!clientId) {
@@ -107,10 +106,7 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
       return;
     }
 
-    // Bounce the user over to GitHub secure authorization layout screen
-    navigate(
-      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user:email`,
-    );
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user:email`;
   };
 
   return (
@@ -433,6 +429,44 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
 
 export default function AuthPage() {
   const [mode, setMode] = useState<AuthMode>("login");
+    const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
+    const navigate = useNavigate()
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    if (code) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      const completeGitHubAuth = async () => {
+        try {
+          toast.loading("Verifying your profile credentials with GitHub...");
+          
+          const response = await axios.post(`${API_BASE_URL}/auth/github`, { code });
+          const result = response.data;
+
+          if (result.token) {
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("user", JSON.stringify(result.user));
+            
+            toast.dismiss();
+            toast.success("Successfully logged in with GitHub!");
+            
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 1000);
+          }
+        } catch (err: any) {
+          toast.dismiss();
+          const errorMsg = err.response?.data?.message || "GitHub authentication handshake failed.";
+          toast.error(errorMsg);
+        }
+      };
+
+      completeGitHubAuth();
+    }
+  }, [navigate, API_BASE_URL]);
 
   return (
     <>
