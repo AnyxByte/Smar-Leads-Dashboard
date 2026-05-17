@@ -19,11 +19,11 @@ app.use("/api/auth", authRoutes);
 app.get("/health", (req: Request, res: Response) => {
   res
     .status(200)
-    .json({ success: true, message: "LeadFlow backend processing safely." });
+    .json({ success: true, message: "Server started successfully" });
 });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error("❌ Thread Runtime Exception:", err.stack);
+  console.error("Runtime Exception:", err.stack);
   res.status(500).json({
     success: false,
     message: "Server runtime error encountered.",
@@ -32,5 +32,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 System Online. Listening for transactions on port: ${PORT}`);
+  console.log(`Server running on port: ${PORT}`);
 });
