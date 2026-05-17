@@ -52,11 +52,11 @@ export const protect = async (
 };
 
 export const authorizeRoles = (...roles: string[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: any, res: Response, next: NextFunction): void => {
     if (!req.user || !roles.includes(req.user.role)) {
       res.status(403).json({
         success: false,
-        message: `Role (${req.user?.role || "Guest"}) is unauthorized to execute this command.`,
+        message: `Role (${req.user?.role || "Unknown"}) is not authorized to access this resource`,
       });
       return;
     }

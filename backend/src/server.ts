@@ -3,10 +3,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import authRoutes from "./routes/authRoutes";
+import leadRoutes from "./routes/leadRoutes";
 
 dotenv.config();
-
-connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/leads", leadRoutes);
 
 app.get("/health", (req: Request, res: Response) => {
   res
@@ -31,6 +31,18 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port: ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to launch server");
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+startServer();
