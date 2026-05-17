@@ -1,6 +1,5 @@
 import {
   Menu,
-  Bell,
   TrendingUp,
   UserCheck,
   PhoneCall,
@@ -33,16 +32,6 @@ export function DashboardHeader({
             <p className="text-xs text-zinc-400 hidden sm:block">
               Manage and track your leads
             </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button className="relative p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 transition-colors">
-            <Bell size={17} />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-violet-600 rounded-full" />
-          </button>
-          <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center text-xs font-semibold text-violet-700 shrink-0">
-            AD
           </div>
         </div>
       </header>

@@ -1,7 +1,6 @@
 import { Zap } from "lucide-react";
 import { Button } from "../ui/button";
-
-const NAV_LINKS = ["Features", "Pricing", "Docs"];
+import { Link } from "react-router";
 
 export default function Navbar() {
   return (
@@ -13,25 +12,23 @@ export default function Navbar() {
         <span className="text-[17px] font-medium text-zinc-900">LeadFlow</span>
       </div>
 
-      <div className="hidden md:flex items-center gap-6">
-        {NAV_LINKS.map((link) => (
-          <a
-            key={link}
-            href="#"
-            className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
-          >
-            {link}
-          </a>
-        ))}
-      </div>
-
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm">
-          Log in
-        </Button>
-        <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white">
-          Get started
-        </Button>
+        <Link to="/auth">
+          <Button variant="outline" size="sm">
+            Log in
+          </Button>
+        </Link>
+        <Link
+          to="/auth"
+          className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
+        >
+          <Button
+            size="sm"
+            className="bg-violet-600 hover:bg-violet-700 text-white"
+          >
+            Get started
+          </Button>
+        </Link>
       </div>
     </nav>
   );
