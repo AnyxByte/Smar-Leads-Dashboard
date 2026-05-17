@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import { GoogleOAuthProvider } from "@react-oauth/google"; // ─── 1. IMPORT PROVIDER
 import Dashboard from "./pages/Dashboard.tsx";
 // @ts-expect-error: side-effect import for CSS
 import "./index.css";
@@ -22,8 +23,12 @@ const router = createBrowserRouter([
   },
 ]);
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "YOUR_FALLBACK_CLIENT_ID.apps.googleusercontent.com";
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
   </StrictMode>,
 );

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form"; // ─── IMPORT HOOK
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Toaster, toast } from "sonner";
 import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google"; // ─── 1. IMPORT GOOGLE HOOK
 import {
   Zap,
   Eye,
@@ -64,7 +65,54 @@ function GitHubIcon() {
   );
 }
 
+// ─── 2. WIRED UP SOCIAL AUTH GROUP ───────────────────────────────────────────
 function SocialAuthGroup({ labelAction }: { labelAction: string }) {
+  const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
+
+  // ─── GOOGLE POPUP FLOW ─────────────────────────────────────────────────────
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const response = await axios.post(`${API_BASE_URL}/auth/google`, {
+          token: tokenResponse.access_token,
+        });
+
+        const result = response.data;
+        if (result.token) {
+          localStorage.setItem("token", result.token);
+          localStorage.setItem("user", JSON.stringify(result.user));
+
+          toast.success("Successfully authenticated via Google!");
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1500);
+        }
+      } catch (err: any) {
+        const errorMsg =
+          err.response?.data?.message ||
+          "Google registration handshake failed.";
+        toast.error(errorMsg);
+      }
+    },
+    onError: () =>
+      toast.error("Google Auth execution cancelled or popup blocked."),
+  });
+
+  // ─── GITHUB REDIRECT FLOW ──────────────────────────────────────────────────
+  const handleGitHubLogin = () => {
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    if (!clientId) {
+      toast.error("VITE_GITHUB_CLIENT_ID is missing in your frontend .env!");
+      return;
+    }
+
+    // Bounce the user over to GitHub secure authorization layout screen
+    navigate(
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=user:email`,
+    );
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center gap-3 my-4">
@@ -75,16 +123,21 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
         <div className="flex-1 h-px bg-zinc-200" />
       </div>
       <div className="grid grid-cols-2 gap-3">
+        {/* Google Authentication Button */}
         <Button
           variant="outline"
           type="button"
+          onClick={() => handleGoogleLogin()}
           className="h-10 text-xs font-semibold gap-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all shadow-sm"
         >
           <GoogleIcon /> Google
         </Button>
+
+        {/* GitHub Authentication Button */}
         <Button
           variant="outline"
           type="button"
+          onClick={handleGitHubLogin} // ─── CONNECTED GITHUB OAUTH HANDLER
           className="h-10 text-xs font-semibold gap-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all shadow-sm"
         >
           <GitHubIcon /> GitHub
@@ -93,7 +146,6 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
     </div>
   );
 }
-
 interface FormPanelProps {
   mode: AuthMode;
   onSwitch: () => void;
@@ -112,9 +164,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
   } = useForm<AuthFormData>();
 
   const navigate = useNavigate();
-
   const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
-
   const passwordValue = watch("password", "");
 
   const getStrength = (pw: string) => {
@@ -134,12 +184,10 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
   };
 
   const strength = getStrength(passwordValue);
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const onSubmit = async (data: AuthFormData) => {
     setLoading(true);
-
     const endpoint =
       mode === "login"
         ? `${API_BASE_URL}/auth/login`
@@ -286,7 +334,6 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
             </button>
           </div>
 
-          {/* Realtime Password Strength Layout Indicators (Only on Signup) */}
           {mode === "signup" && passwordValue && (
             <div className="mt-2 space-y-1">
               <div className="flex gap-1">
@@ -311,9 +358,10 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
           )}
         </div>
 
+        {/* Confirm Password Field */}
         {mode === "signup" && (
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+            <label className="block text-xs font-medium text-zinc-700 mb-1.5">
               Confirm password
             </label>
             <div className="relative">
@@ -375,6 +423,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
         </Button>
       </form>
 
+      {/* ─── 3. PASS DYNAMIC LABELS CLEANLY TO UPDATED SUITE ─── */}
       <SocialAuthGroup
         labelAction={mode === "login" ? "or sign in with" : "or sign up with"}
       />
@@ -393,7 +442,6 @@ export default function AuthPage() {
         <LeftPanel />
 
         <div className="flex-1 flex flex-col">
-          {/* Mobile adaptive layout top banner */}
           <div className="lg:hidden flex items-center gap-2.5 px-6 py-5 border-b border-zinc-100">
             <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
               <Zap size={15} className="text-white" />
