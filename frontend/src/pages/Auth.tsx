@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Toaster, toast } from "sonner";
+import toast from 'react-hot-toast';
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google"; // ─── 1. IMPORT GOOGLE HOOK
 import {
@@ -514,7 +514,6 @@ export default function AuthPage() {
         </div>
       </div>
 
-      <Toaster />
     </>
   );
 }

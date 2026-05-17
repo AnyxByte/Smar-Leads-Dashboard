@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import "./index.css";
 import Landing from "./pages/Landing.tsx";
 import Auth from "./pages/Auth.tsx";
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
   {
@@ -23,12 +24,15 @@ const router = createBrowserRouter([
   },
 ]);
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "YOUR_FALLBACK_CLIENT_ID.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ??
+  "YOUR_FALLBACK_CLIENT_ID.apps.googleusercontent.com";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <RouterProvider router={router} />
+      <Toaster position="top-center" reverseOrder={false} />
     </GoogleOAuthProvider>
   </StrictMode>,
 );
