@@ -257,7 +257,7 @@ export const googleAuth = async (
 
     res.status(200).json({
       success: true,
-      token: generateToken(userIdStr), 
+      token: generateToken(userIdStr),
       user: {
         id: user._id,
         name: user.name,
@@ -280,7 +280,8 @@ export const googleAuth = async (
 
 export const updateUserProfile = async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.user._id);
+    const userId = (req as any).user._id;
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({
