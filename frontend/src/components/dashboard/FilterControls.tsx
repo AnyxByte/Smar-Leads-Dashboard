@@ -41,7 +41,6 @@ export function FilterControls({
   onAddLeadClick,
   isFiltered,
 }: FilterControlsProps) {
-  // Dynamic Array mappings for the dropdown menus
   const statusOptions = [
     { value: "All", label: "All statuses" },
     ...["New", "Contacted", "Qualified", "Lost"].map((s) => ({
@@ -65,7 +64,6 @@ export function FilterControls({
 
   return (
     <div className="px-4 sm:px-6 py-4 border-b border-zinc-100 space-y-3">
-      {/* Title & Toolbar Actions Row */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-sm font-semibold text-zinc-900">All Leads</h2>
@@ -93,10 +91,8 @@ export function FilterControls({
         </div>
       </div>
 
-      {/* Inputs and Dropdowns Filtering Row */}
       <div className="flex items-center gap-2 flex-wrap">
-        {/* Text Input Search Engine */}
-        <div className="relative flex-1 min-w-[160px] max-w-xs">
+        <div className="relative flex-1 min-w-40 max-w-xs">
           <Search
             size={14}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
@@ -117,7 +113,6 @@ export function FilterControls({
           )}
         </div>
 
-        {/* Reusable Status Filter */}
         <DashboardSelect
           value={statusFilter}
           onValueChange={setStatusFilter}
@@ -127,7 +122,6 @@ export function FilterControls({
           icon={<SlidersHorizontal size={13} />}
         />
 
-        {/* Reusable Source Filter */}
         <DashboardSelect
           value={sourceFilter}
           onValueChange={setSourceFilter}
@@ -136,7 +130,6 @@ export function FilterControls({
           widthClass="w-[180px]"
         />
 
-        {/* Reusable Sort Engine */}
         <DashboardSelect
           value={sortOrder}
           onValueChange={(v) => setSortOrder(v as SortOrder)}

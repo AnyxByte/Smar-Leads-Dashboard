@@ -1,13 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import { GoogleOAuthProvider } from "@react-oauth/google"; // ─── 1. IMPORT PROVIDER
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import Dashboard from "./pages/Dashboard.tsx";
 // @ts-expect-error: side-effect import for CSS
 import "./index.css";
 import Landing from "./pages/Landing.tsx";
 import Auth from "./pages/Auth.tsx";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import { LeadProvider } from "./context/LeadContext.tsx";
+import { ThemeProvider } from "./context/ThemeContext";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +33,12 @@ const GOOGLE_CLIENT_ID =
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <RouterProvider router={router} />
-      <Toaster position="top-center" reverseOrder={false} />
+      <LeadProvider>
+        <ThemeProvider>
+          <RouterProvider router={router} />
+          <Toaster position="top-center" reverseOrder={false} />
+        </ThemeProvider>
+      </LeadProvider>
     </GoogleOAuthProvider>
   </StrictMode>,
 );

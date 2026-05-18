@@ -1,27 +1,67 @@
-import {
-  Zap,
-  LayoutDashboard,
-  Users,
-  BarChart2,
-  Download,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { Zap, LayoutDashboard, Settings, LogOut } from "lucide-react";
 
+// 🏆 1. UPDATE THE PROPS INTERFACE TO EXPECT VIEW STATES FROM DASHBOARD
 interface SidebarProps {
   mobileOpen: boolean;
   onMobileClose: () => void;
+  currentView: "Dashboard" | "Settings"; // Track active selection
+  setView: (view: "Dashboard" | "Settings") => void; // Trigger view flip
 }
 
 const NAV_ITEMS = [
-  { icon: <LayoutDashboard size={16} />, label: "Dashboard", active: true },
-  { icon: <Users size={16} />, label: "Leads", active: false },
-  { icon: <BarChart2 size={16} />, label: "Analytics", active: false },
-  { icon: <Download size={16} />, label: "Export", active: false },
-  { icon: <Settings size={16} />, label: "Settings", active: false },
+  { icon: <LayoutDashboard size={16} />, label: "Dashboard" },
+  { icon: <Settings size={16} />, label: "Settings" },
 ];
 
-export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
+export default function Sidebar({
+  mobileOpen,
+  onMobileClose,
+  currentView,
+  setView,
+}: SidebarProps) {
+  const navigate = useNavigate();
+
+  const [userProfile, setUserProfile] = useState({
+    name: "User",
+    email: "user@leadflow.io",
+    role: "Sales User",
+  });
+
+  // Dynamic local storage listener keeps profile data perfectly in sync
+  useEffect(() => {
+    const loadUserData = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUserProfile({
+          name: parsedUser.name || "User Name",
+          email: parsedUser.email || "user@leadflow.io",
+          role: parsedUser.role || "Sales User",
+        });
+      }
+    };
+
+    loadUserData();
+    window.addEventListener("storage", loadUserData);
+    return () => window.removeEventListener("storage", loadUserData);
+  }, []);
+
+  const handleLogOutAction = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/auth");
+  };
+
+  const getInitials = (fullName: string) => {
+    const names = fullName.trim().split(" ");
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    return fullName.slice(0, 2).toUpperCase();
+  };
+
   const inner = (
     <div className="flex flex-col h-full bg-white border-r border-zinc-200">
       {/* Logo */}
@@ -34,42 +74,58 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         </span>
       </div>
 
-      {/* Nav */}
+      {/* Nav Link Stack */}
       <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
         <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest px-3 pb-2 pt-1">
           Main
         </p>
-        {NAV_ITEMS.map((item) => (
-          <button
-            key={item.label}
-            onClick={onMobileClose}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors ${
-              item.active
-                ? "bg-violet-50 text-violet-700 font-medium"
-                : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
-            }`}
-          >
-            {item.icon}
-            {item.label}
-          </button>
-        ))}
+        {NAV_ITEMS.map((item) => {
+          // 🏆 2. DYNAMICALLY CHECK IF THE LINK IS ACTIVE BASED ON GLOBAL STATE
+          const isItemActive = currentView === item.label;
+
+          return (
+            <button
+              key={item.label}
+              type="button"
+              // 🏆 3. TRIGGER VIEW CHANGE + CLOSE MOBILE WRAPPER ON CLICK
+              onClick={() => {
+                setView(item.label as "Dashboard" | "Settings");
+                onMobileClose();
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors cursor-pointer ${
+                isItemActive
+                  ? "bg-violet-50 text-violet-700 font-medium"
+                  : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
+              }`}
+            >
+              {item.icon}
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
-      {/* User */}
+      {/* User Footer Profile */}
       <div className="border-t border-zinc-100 px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center text-xs font-semibold text-violet-700 shrink-0">
-            AD
+          <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center text-xs font-semibold text-violet-700 shrink-0 select-none">
+            {getInitials(userProfile.name)}
           </div>
+
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-zinc-800 truncate">
-              Admin User
+              {userProfile.name}
             </p>
             <p className="text-[10px] text-zinc-400 truncate">
-              admin@leadflow.io
+              {userProfile.email}
             </p>
           </div>
-          <button className="text-zinc-400 hover:text-zinc-600 transition-colors">
+
+          <button
+            onClick={handleLogOutAction}
+            title="Log out of system session"
+            className="text-zinc-400 hover:text-red-500 hover:bg-red-50/50 p-1.5 rounded-lg transition-all cursor-pointer"
+          >
             <LogOut size={14} />
           </button>
         </div>
