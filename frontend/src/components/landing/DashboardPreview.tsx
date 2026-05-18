@@ -70,7 +70,6 @@ export default function DashboardPreview() {
 
   return (
     <div className="mb-10 rounded-xl border border-zinc-200 overflow-hidden bg-zinc-50 shadow-sm">
-      {/* Window chrome */}
       <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-zinc-200">
         <span className="w-3 h-3 rounded-full bg-red-400" />
         <span className="w-3 h-3 rounded-full bg-amber-400" />
@@ -79,7 +78,7 @@ export default function DashboardPreview() {
       </div>
 
       <div className="flex" style={{ minHeight: 220 }}>
-        {/* Sidebar */}
+      
         <aside className="w-40 bg-white border-r border-zinc-200 py-3 shrink-0">
           {SIDEBAR_ITEMS.map((item) => (
             <div
@@ -116,7 +115,6 @@ export default function DashboardPreview() {
             </button>
           </div>
 
-          {/* Lead rows */}
           <div className="space-y-2">
             {filteredLeads.map((lead) => (
               <div

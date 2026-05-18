@@ -1,7 +1,7 @@
 import { Zap, Moon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Link } from "react-router";
-import { useTheme } from "@/context/ThemeContext"; // 🏆 Consume global theme hook
+import { useTheme } from "@/context/ThemeContext"; 
 
 export default function Navbar() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -9,7 +9,6 @@ export default function Navbar() {
   return (
     <nav className="flex items-center justify-between py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 sticky top-0 z-50 transition-colors duration-200">
       
-      {/* Brand Label */}
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
           <Zap size={16} className="text-white" />
@@ -17,10 +16,8 @@ export default function Navbar() {
         <span className="text-[17px] font-medium text-zinc-900 dark:text-zinc-50">LeadFlow</span>
       </div>
 
-      {/* Control Actions */}
       <div className="flex items-center gap-3">
         
-        {/* 🌙 PURE MOON TOGGLE BUTTON */}
         <button
           type="button"
           onClick={toggleTheme}

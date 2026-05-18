@@ -112,8 +112,8 @@ export default function LeadModal({
       if (response.data.success) {
         toast.success(
           initial
-            ? "Lead optimized successfully!"
-            : "Lead registered into pipeline!",
+            ? "Lead updated successfully!"
+            : "Lead added successfully!",
         );
         
         onSaveSuccess(); 
@@ -138,13 +138,10 @@ export default function LeadModal({
         e.target === e.currentTarget && !isSubmitting && onClose()
       }
     >
-      {/* 🏆 CHASSIS: Added dark:bg-zinc-900 and dark:border-zinc-800 card parameters */}
       <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-150 transition-colors">
         
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800/80">
           <div>
-            {/* 🏆 HEADING & SUBTITLE: Configured dark text tokens */}
             <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               {initial ? "Edit lead" : "Create new lead"}
             </h2>
@@ -163,17 +160,14 @@ export default function LeadModal({
           </button>
         </div>
 
-        {/* Form Container */}
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Body */}
+
           <div className="px-6 py-5 space-y-4">
             
-            {/* Name Field */}
             <div>
               <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                 Full name
               </label>
-              {/* 🏆 INPUT COMPONENT: Injected dark placeholder, text, and field background variables */}
               <Input
                 disabled={isSubmitting}
                 placeholder="e.g. Rahul Kumar"
@@ -191,12 +185,10 @@ export default function LeadModal({
               )}
             </div>
 
-            {/* Email Field */}
             <div>
               <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                 Email address
               </label>
-              {/* 🏆 INPUT COMPONENT: Fixed text color matching to prevent dark mode typing vanishing */}
               <Input
                 type="email"
                 disabled={isSubmitting}
@@ -215,9 +207,8 @@ export default function LeadModal({
               )}
             </div>
 
-            {/* Dropdown Select Matrix Row */}
             <div className="grid grid-cols-2 gap-4">
-              {/* Status Field */}
+      
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   Status
@@ -237,7 +228,6 @@ export default function LeadModal({
                 />
               </div>
 
-              {/* Source Field */}
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   Source
@@ -264,7 +254,6 @@ export default function LeadModal({
             </div>
           </div>
 
-          {/* Footer Actions */}
           <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/20 dark:bg-zinc-950/20 transition-colors">
             <Button
               variant="outline"

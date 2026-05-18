@@ -12,7 +12,6 @@ export default function SettingsView() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load user details dynamically from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -53,12 +52,12 @@ export default function SettingsView() {
 
       if (response.data.success) {
         localStorage.setItem("user", JSON.stringify(response.data.data));
-        toast.success("Profile records synchronized successfully!");
+        toast.success("Profile updated!");
         window.dispatchEvent(new Event("storage"));
       }
     } catch (err: any) {
       const serverMsg =
-        err.response?.data?.message || "Failed to sync profile changes.";
+        err.response?.data?.message || "Failed to update.";
       toast.error(serverMsg);
     } finally {
       setIsSaving(false);
@@ -70,10 +69,9 @@ export default function SettingsView() {
   return (
     <div className="max-w-3xl space-y-6 animate-in fade-in duration-200">
       
-      {/* 1. ROLE PRIVILEGE BANNER */}
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm transition-colors duration-200">
         <div className="flex items-start gap-4">
-          {/* 🏆 ICON SHIELD BADGE: Added dark:bg configurations for adaptive translucent backgrounds */}
+
           <div
             className={`p-2.5 rounded-lg shrink-0 transition-colors ${
               isAdmin 
@@ -88,7 +86,6 @@ export default function SettingsView() {
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
                 Security Access Tier
               </h3>
-              {/* 🏆 ACCESS PILL: Styled adaptive borders and label backgrounds dynamically */}
               <span
                 className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border transition-colors ${
                   isAdmin
@@ -108,9 +105,8 @@ export default function SettingsView() {
         </div>
       </div>
 
-      {/* 2. PROFILE EDIT FORM PANEL */}
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
-        {/* Header Block Section */}
+
         <div className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/40 transition-colors">
           <h3 className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">
             Account Specifications
@@ -121,7 +117,7 @@ export default function SettingsView() {
         </div>
 
         <form onSubmit={handleSaveChanges} className="p-6 space-y-4">
-          {/* Full Name field sandbox */}
+         
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
               Full Name
@@ -131,7 +127,6 @@ export default function SettingsView() {
                 size={14}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
               />
-              {/* 🏆 INPUT FIELD: Integrated dark viewport contrast attributes and matching ring shades */}
               <input
                 type="text"
                 name="name"
@@ -144,7 +139,6 @@ export default function SettingsView() {
             </div>
           </div>
 
-          {/* Email Address field sandbox */}
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
               Email Address
@@ -154,7 +148,6 @@ export default function SettingsView() {
                 size={14}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
               />
-              {/* 🏆 INPUT FIELD: Fixed type to "email" for browser compliance and configured dark attributes */}
               <input
                 type="email"
                 name="email"
@@ -167,9 +160,8 @@ export default function SettingsView() {
             </div>
           </div>
 
-          {/* Form Action Submit Anchor Row */}
           <div className="pt-2 flex justify-end">
-            {/* 🏆 BUTTON VARIANT: Shifts to clean crisp white on dark layout background cards seamlessly */}
+       
             <button
               type="submit"
               disabled={isSaving}

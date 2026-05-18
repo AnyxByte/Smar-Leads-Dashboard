@@ -24,7 +24,6 @@ interface LeadsTableProps {
   onDeleteTarget: (lead: Lead) => void;
 }
 
-// 🏆 UPGRADED CHIP DICTIONARIES: Added translucent dark configurations to keep badges highly legible
 const STATUS_STYLES: Record<LeadStatus, string> = {
   New: "bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-400",
   Contacted: "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-400",
@@ -54,7 +53,6 @@ export function LeadsTable({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            {/* 🏆 HEADER BAR: Adjusted background color limits and borders */}
             <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-950/40 transition-colors">
               <th className="text-left text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider px-6 py-3">Name</th>
               <th className="text-left text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider px-4 py-3 hidden md:table-cell">Email</th>
@@ -64,17 +62,14 @@ export function LeadsTable({
               <th className="text-right text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider px-6 py-3">Actions</th>
             </tr>
           </thead>
-          {/* 🏆 ROW SEPARATORS: Adjusted grid line contrast points */}
           <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {paginatedLeads.map((lead) => (
               <tr key={lead.id} className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors group">
                 <td className="px-6 py-3.5">
                   <div className="flex items-center gap-3">
-                    {/* Initials Placeholder */}
                     <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-950/50 flex items-center justify-center text-xs font-semibold text-violet-700 dark:text-violet-400 shrink-0 select-none">
                       {initials(lead.name)}
                     </div>
-                    {/* Primary Name Field Text */}
                     <span className="font-medium text-zinc-800 dark:text-zinc-200 text-sm whitespace-nowrap">{lead.name}</span>
                   </div>
                 </td>
@@ -91,7 +86,6 @@ export function LeadsTable({
                   <span className="text-zinc-400 dark:text-zinc-500 text-xs">{fmtDate(lead.createdAt)}</span>
                 </td>
                 <td className="px-6 py-3.5">
-                  {/* 🏆 ACTION QUICK TRIGGERS: Tuned button contrast variants */}
                   <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button 
                       onClick={() => onEdit(lead)} 
@@ -112,7 +106,6 @@ export function LeadsTable({
               </tr>
             ))}
 
-            {/* 🏆 EMPTY STATE FALLBACK BOX: Inverted background and label contrast structures */}
             {paginatedLeads.length === 0 && (
               <tr>
                 <td colSpan={6} className="text-center py-16">
@@ -130,13 +123,11 @@ export function LeadsTable({
         </table>
       </div>
 
-      {/* ─── 🏆 EMBEDDED PAGINATION CONTROLS ─── */}
       <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-zinc-100 dark:border-zinc-800 transition-colors">
         <p className="text-xs text-zinc-400 dark:text-zinc-500">
           Page <span className="font-medium text-zinc-700 dark:text-zinc-300">{safePage}</span> of <span className="font-medium text-zinc-700 dark:text-zinc-300">{totalPages}</span> · {filteredCount} lead{filteredCount !== 1 ? "s" : ""}
         </p>
         <div className="flex items-center gap-1">
-          {/* Previous Page Control Anchor */}
           <Button 
             variant="outline" 
             size="sm" 
@@ -147,7 +138,6 @@ export function LeadsTable({
             <ChevronLeft size={14} />
           </Button>
 
-          {/* Dynamic Page Index Step Mapping Array */}
           {Array.from({ length: totalPages }, (_, i) => i + 1)
             .filter((p) => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
             .reduce<(number | "…")[]>((acc, p, i, arr) => {
@@ -175,7 +165,6 @@ export function LeadsTable({
               )
             )}
 
-          {/* Next Page Control Anchor */}
           <Button 
             variant="outline" 
             size="sm" 

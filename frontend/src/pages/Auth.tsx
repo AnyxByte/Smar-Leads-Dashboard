@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import toast from 'react-hot-toast';
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google"; 
-import { useTheme } from "@/context/ThemeContext"; // 🏆 Consume global theme context
+import { useTheme } from "@/context/ThemeContext"; 
 import {
   Zap,
   Eye,
@@ -221,7 +221,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
 
   return (
     <div className="flex flex-col w-full max-w-sm">
-      {/* Header Info */}
+   
       <div className="mb-4">
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50 mb-1.5 tracking-tight">
           {mode === "login" ? "Sign in to LeadFlow" : "Create your account"}
@@ -265,7 +265,6 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
           </div>
         )}
 
-        {/* Email Field */}
         <div>
           <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
             Email address
@@ -295,7 +294,6 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
           )}
         </div>
 
-        {/* Password Field */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
@@ -352,7 +350,6 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
           )}
         </div>
 
-        {/* Confirm Password Field */}
         {mode === "signup" && (
           <div>
             <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
@@ -426,7 +423,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
 
 export default function AuthPage() {
   const [mode, setMode] = useState<AuthMode>("login");
-  const { isDarkMode, toggleTheme } = useTheme(); // 🏆 Consume Theme controller rules
+  const { isDarkMode, toggleTheme } = useTheme(); 
   const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
   const navigate = useNavigate();
 
@@ -470,13 +467,11 @@ export default function AuthPage() {
     <>
       <style>{`@keyframes grow { from { width: 0%; } to { width: 100%; } }`}</style>
 
-      {/* 🏆 RESPONSIVE CHASSIS: Adapts canvas color scheme fluidly across breakpoints */}
       <div className="min-h-screen flex bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 antialiased transition-colors duration-200">
         <LeftPanel />
 
         <div className="flex-1 flex flex-col min-w-0">
           
-          {/* Mobile Top Header Ribbon Branding */}
           <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-900">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
@@ -488,10 +483,8 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* 🏆 ACTION CONTROL BAR: Holds switcher and premium theme switch button */}
           <div className="flex items-center justify-end gap-3 px-6 pt-6 pb-2">
             
-            {/* 🌙 PURE MOON TOGGLE BUTTON */}
             <button
               type="button"
               onClick={toggleTheme}
@@ -508,7 +501,6 @@ export default function AuthPage() {
               />
             </button>
 
-            {/* Login / Sign Up View Toggle Slider Panel */}
             <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-1 transition-colors">
               {(["login", "signup"] as AuthMode[]).map((m) => (
                 <button
@@ -527,7 +519,6 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* Form Content Anchor Sandbox */}
           <div className="flex-1 flex items-center justify-center px-6 py-4">
             <AuthFormPanel
               key={mode}

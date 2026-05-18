@@ -61,10 +61,9 @@ export default function Sidebar({
   };
 
   const inner = (
-    /* 🏆 MAIN BOX: Swapped background and right border constraints to handle dark layout spaces */
+    
     <div className="flex flex-col h-full bg-white dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-900 transition-colors duration-200">
       
-      {/* Logo Wrapper Branding Row */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-zinc-100 dark:border-zinc-900">
         <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center shrink-0 shadow-sm shadow-violet-600/10">
           <Zap size={15} className="text-white" />
@@ -73,8 +72,6 @@ export default function Sidebar({
           LeadFlow
         </span>
       </div>
-
-      {/* Nav List Array Menu Stack */}
       <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
         <p className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest px-3 pb-2 pt-1">
           Main
@@ -90,7 +87,6 @@ export default function Sidebar({
                 setView(item.label as "Dashboard" | "Settings");
                 onMobileClose();
               }}
-              /* 🏆 NAV ITEMS: Injected dynamic dark highlights and fluid hover parameters */
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors cursor-pointer select-none ${
                 isItemActive
                   ? "bg-violet-50 text-violet-700 dark:bg-violet-950/40 dark:text-violet-400 font-medium"
@@ -104,16 +100,14 @@ export default function Sidebar({
         })}
       </nav>
 
-      {/* 🏆 USER PROFILE FOOTER BLOCK: Inverted border dividers, avatar weights, and copy variants */}
+     
       <div className="border-t border-zinc-100 dark:border-zinc-900 px-4 py-4 transition-colors">
         <div className="flex items-center gap-3">
           
-          {/* Initials Circle Token */}
           <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-950/50 flex items-center justify-center text-xs font-semibold text-violet-700 dark:text-violet-400 shrink-0 select-none border border-transparent dark:border-violet-900/30">
             {getInitials(userProfile.name)}
           </div>
 
-          {/* User Meta Identifiers */}
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-zinc-800 dark:text-zinc-200 truncate">
               {userProfile.name}
@@ -123,7 +117,6 @@ export default function Sidebar({
             </p>
           </div>
 
-          {/* Secure Logout Action Trigger */}
           <button
             onClick={handleLogOutAction}
             title="Log out of system session"
@@ -139,12 +132,10 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-56 shrink-0 h-screen sticky top-0">
         {inner}
       </aside>
 
-      {/* Mobile overlay background shielding */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-xs" onClick={onMobileClose} />
