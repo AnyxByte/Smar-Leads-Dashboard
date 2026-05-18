@@ -19,7 +19,6 @@ export default function Dashboard() {
     filters,
     isLoading,
     updateFilter,
-    resetFilters,
     deleteLead,
     fetchLeads
   } = useLeads();
