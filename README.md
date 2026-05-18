@@ -96,7 +96,7 @@ InternProj/
 
 ```env
 PORT=5000
-NODE_ENV=production
+NODE_ENV=development
 MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/SmartLeadsDB?retryWrites=true&w=majority
 JWT_SECRET=your_jwt_secret
 CLIENT_URL=http://localhost:5173
