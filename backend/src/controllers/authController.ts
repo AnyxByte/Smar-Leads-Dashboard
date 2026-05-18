@@ -131,7 +131,6 @@ export const githubAuth = async (
       return;
     }
 
-    // 2. Fetch the base GitHub user profile data
     const userProfileResponse = await axios.get("https://api.github.com/user", {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
@@ -139,7 +138,6 @@ export const githubAuth = async (
     const { name, login, email: githubEmail } = userProfileResponse.data;
     let email = githubEmail;
 
-    // 🏆 CORRECTION: If their email is private, fetch their verified email arrays explicitly
     if (!email) {
       try {
         const emailResponse = await axios.get(
@@ -149,7 +147,6 @@ export const githubAuth = async (
           },
         );
 
-        // Isolate the email record flagged as their primary contact point
         const primaryEmailObj = emailResponse.data.find(
           (e: any) => e.primary === true,
         );
@@ -161,7 +158,6 @@ export const githubAuth = async (
       }
     }
 
-    // Ultimate fallback if GitHub returns nothing across both endpoints
     if (!email) {
       email = `${login}@github.user.node`;
     }
@@ -243,12 +239,10 @@ export const googleAuth = async (
       return;
     }
 
-    // 2. Find or create the user in your MongoDB database
     let user = await User.findOne({ email });
 
     if (!user) {
       const randomPassword = Math.random().toString(36).slice(-16) + "G1!";
-      // Fallback name calculation if name isn't present in tokeninfo fields
       const fallbackName = email.split("@")[0];
 
       user = await User.create({
@@ -259,12 +253,11 @@ export const googleAuth = async (
       });
     }
 
-    // 3. Complete authentication by generating your app's signature JWT token
     const userIdStr = user._id.toString();
 
     res.status(200).json({
       success: true,
-      token: generateToken(userIdStr), // Using your app's native token generator function
+      token: generateToken(userIdStr), 
       user: {
         id: user._id,
         name: user.name,
@@ -273,11 +266,9 @@ export const googleAuth = async (
       },
     });
   } catch (error: any) {
-    // This logs the exact, raw response from Google's endpoint to your console so you can see why it failed
-    console.error("─── GOOGLE VERIFICATION AXIOS ERROR DETAILED LOG ───");
+    console.error("─── GOOGLE VERIFICATION AXIOS ERROR ");
     console.error("Message:", error.response?.data || error.message);
     console.error("Status Code from Google Api:", error.response?.status);
-    console.error("─────────────────────────────────────────────────────");
 
     res.status(401).json({
       success: false,
@@ -289,7 +280,6 @@ export const googleAuth = async (
 
 export const updateUserProfile = async (req: Request, res: Response) => {
   try {
-    // 1. req.user._id is populated by your JWT authentication middleware
     const user = await User.findById(req.user._id);
 
     if (!user) {

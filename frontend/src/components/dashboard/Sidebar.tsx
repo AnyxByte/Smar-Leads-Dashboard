@@ -2,12 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Zap, LayoutDashboard, Settings, LogOut } from "lucide-react";
 
-// 🏆 1. UPDATE THE PROPS INTERFACE TO EXPECT VIEW STATES FROM DASHBOARD
 interface SidebarProps {
   mobileOpen: boolean;
   onMobileClose: () => void;
-  currentView: "Dashboard" | "Settings"; // Track active selection
-  setView: (view: "Dashboard" | "Settings") => void; // Trigger view flip
+  currentView: "Dashboard" | "Settings"; 
+  setView: (view: "Dashboard" | "Settings") => void; 
 }
 
 const NAV_ITEMS = [
@@ -29,7 +28,6 @@ export default function Sidebar({
     role: "Sales User",
   });
 
-  // Dynamic local storage listener keeps profile data perfectly in sync
   useEffect(() => {
     const loadUserData = () => {
       const storedUser = localStorage.getItem("user");
@@ -74,20 +72,17 @@ export default function Sidebar({
         </span>
       </div>
 
-      {/* Nav Link Stack */}
       <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
         <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest px-3 pb-2 pt-1">
           Main
         </p>
         {NAV_ITEMS.map((item) => {
-          // 🏆 2. DYNAMICALLY CHECK IF THE LINK IS ACTIVE BASED ON GLOBAL STATE
           const isItemActive = currentView === item.label;
 
           return (
             <button
               key={item.label}
               type="button"
-              // 🏆 3. TRIGGER VIEW CHANGE + CLOSE MOBILE WRAPPER ON CLICK
               onClick={() => {
                 setView(item.label as "Dashboard" | "Settings");
                 onMobileClose();

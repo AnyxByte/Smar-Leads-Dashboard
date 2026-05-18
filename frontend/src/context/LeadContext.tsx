@@ -99,7 +99,7 @@ export const LeadProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (response.data.success) {
           setLeads(response.data.data);
-          setPagination(response.data.pagination); // Save backend metadata
+          setPagination(response.data.pagination); 
         }
       } catch (err: any) {
         const errMsg =

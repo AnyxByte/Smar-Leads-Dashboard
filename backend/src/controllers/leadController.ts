@@ -27,7 +27,6 @@ export const getLeads = async (
     if (status) queryConditions.status = status;
     if (source) queryConditions.source = source;
 
-    // Multi-field text search by name or email using regex
     if (search) {
       queryConditions.$or = [
         { name: { $regex: search, $options: "i" } },
@@ -35,18 +34,15 @@ export const getLeads = async (
       ];
     }
 
-    // Determine Sort options
-    let sortCondition: any = { createdAt: -1 }; // Default: Latest
+    let sortCondition: any = { createdAt: -1 }; 
     if (sort === "oldest") {
       sortCondition = { createdAt: 1 };
     }
 
-    // Pagination constants setup
     const page = parseInt(req.query.page as string) || 1;
-    const limit = 10; // Mandatory limit per assignment specs
+    const limit = 10; 
     const skip = (page - 1) * limit;
 
-    // Execute paginated queries in parallel for performance
     const [leads, totalLeads] = await Promise.all([
       Lead.find(queryConditions).sort(sortCondition).skip(skip).limit(limit),
       Lead.countDocuments(queryConditions),

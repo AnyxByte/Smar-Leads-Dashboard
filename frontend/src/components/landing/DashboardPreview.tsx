@@ -96,14 +96,12 @@ export default function DashboardPreview() {
           ))}
         </aside>
 
-        {/* Main content */}
         <main className="flex-1 p-4 bg-white">
-          {/* Filter pills */}
+
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             {STATUS_FILTERS.map((f) => (
               <button
                 key={f}
-                // onClick={() => useStateActiveFilter(f)}
                 className={`text-[11px] px-3 py-1 rounded-full border transition-colors ${
                   activeFilter === f
                     ? "bg-violet-100 text-violet-700 border-violet-300"

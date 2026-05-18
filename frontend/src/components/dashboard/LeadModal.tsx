@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form"; // 🏆 Imported Controller for custom dropdowns
-import { zodResolver } from "@hookform/resolvers/zod"; // 🏆 Imported Zod Resolver
+import { useForm, Controller } from "react-hook-form"; 
+import { zodResolver } from "@hookform/resolvers/zod"; 
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -268,7 +268,7 @@ export default function LeadModal({
           <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-zinc-100">
             <Button
               variant="outline"
-              type="button" // 🚨 Crucial: must define type="button" so cancel doesn't accidentally execute form submission trigger logs!
+              type="button" 
               onClick={onClose}
               disabled={isSubmitting}
               className="rounded-xl px-4 text-zinc-600"
@@ -276,7 +276,7 @@ export default function LeadModal({
               Cancel
             </Button>
             <Button
-              type="submit" // 🚨 Executes form handling loop logic
+              type="submit"
               disabled={isSubmitting}
               className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-4 font-medium shadow-sm min-w-[100px]"
             >

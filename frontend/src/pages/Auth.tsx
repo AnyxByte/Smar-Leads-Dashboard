@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import toast from 'react-hot-toast';
 import axios from "axios";
-import { useGoogleLogin } from "@react-oauth/google"; // ─── 1. IMPORT GOOGLE HOOK
+import { useGoogleLogin } from "@react-oauth/google"; 
 import {
   Zap,
   Eye,
@@ -65,12 +65,10 @@ function GitHubIcon() {
   );
 }
 
-// ─── 2. WIRED UP SOCIAL AUTH GROUP ───────────────────────────────────────────
 function SocialAuthGroup({ labelAction }: { labelAction: string }) {
   const navigate = useNavigate();
   const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
-  // ─── GOOGLE POPUP FLOW ─────────────────────────────────────────────────────
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
@@ -119,7 +117,6 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
         <div className="flex-1 h-px bg-zinc-200" />
       </div>
       <div className="grid grid-cols-2 gap-3">
-        {/* Google Authentication Button */}
         <Button
           variant="outline"
           type="button"
@@ -129,11 +126,10 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
           <GoogleIcon /> Google
         </Button>
 
-        {/* GitHub Authentication Button */}
         <Button
           variant="outline"
           type="button"
-          onClick={handleGitHubLogin} // ─── CONNECTED GITHUB OAUTH HANDLER
+          onClick={handleGitHubLogin} 
           className="h-10 text-xs font-semibold gap-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all shadow-sm"
         >
           <GitHubIcon /> GitHub
@@ -242,7 +238,6 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
-        {/* Conditional Field: Name (Only on Signup) */}
         {mode === "signup" && (
           <div>
             <label className="block text-xs font-semibold text-zinc-700 mb-1.5">

@@ -5,7 +5,6 @@ import DeleteModal from "@/components/dashboard/DeleteModal";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { LeadsTable } from "@/components/dashboard/LeadsTable";
 import { FilterControls } from "@/components/dashboard/FilterControls";
-// import SettingsView from "@/components/dashboard/SettingsView"; // 🏆 IMPORT SETTINGS COMPONENT
 import { useLeads, SortOrder } from "@/context/LeadContext";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -24,11 +23,9 @@ export default function Dashboard() {
     deleteLead,
   } = useLeads();
 
-  // ─── VIEW MODE & SUB-PANEL STATES ─────────────────────────────────────────
-  const [currentView, setCurrentView] = useState<ViewMode>("Dashboard"); // 🏆 Handles layout view switching
+  const [currentView, setCurrentView] = useState<ViewMode>("Dashboard"); 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Local tracking UI elements for Debounced Search Subsystem
   const [search, setSearch] = useState(filters.search);
   const [lastDispatchedSearch, setLastDispatchedSearch] = useState(
     filters.search,
@@ -40,7 +37,6 @@ export default function Dashboard() {
 
   const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
-  // External Reset Synchronization
   useEffect(() => {
     if (filters.search === "") {
       setSearch("");
@@ -48,7 +44,6 @@ export default function Dashboard() {
     }
   }, [filters.search]);
 
-  // Keystroke Debounce Processing Layer
   useEffect(() => {
     const delayTimer = setTimeout(() => {
       if (search !== lastDispatchedSearch) {
@@ -60,7 +55,6 @@ export default function Dashboard() {
     return () => clearTimeout(delayTimer);
   }, [search, lastDispatchedSearch, updateFilter]);
 
-  // High-level Stats Calculation Matrix
   const stats = useMemo(() => {
     return {
       total: pagination?.totalLeads ?? leads.length,
@@ -70,7 +64,6 @@ export default function Dashboard() {
     };
   }, [leads, pagination]);
 
-  // CSV Report Generator
   const handleExportCSV = async () => {
     try {
       toast.loading("Compiling pipeline export matrices...");

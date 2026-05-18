@@ -12,7 +12,6 @@ export default function SettingsView() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load user details dynamically from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -38,7 +37,6 @@ export default function SettingsView() {
       const token = localStorage.getItem("token");
       const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
-      // 🏆 HIT THE LIVE ENDPOINT
       const response = await axios.put(
         `${API_BASE_URL}/auth/profile`,
         {
