@@ -4,7 +4,6 @@ interface StatCardProps {
   icon: React.ReactNode;
   iconBg: string;
   iconColor: string;
-  delta?: string;
 }
 
 export default function StatCard({
@@ -13,7 +12,6 @@ export default function StatCard({
   icon,
   iconBg,
   iconColor,
-  delta,
 }: StatCardProps) {
   return (
     /* 🏆 CARD CONTAINER: Flips from flat white to deep zinc, adjusting hover shadows cleanly */
@@ -35,13 +33,6 @@ export default function StatCard({
         <span className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50 tracking-tight">
           {value}
         </span>
-        
-        {delta && (
-          /* 🏆 PERFORMANCE RADIAL PILL: Mutes positive indicators down into a dark moss-green layout hue */
-          <span className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30 px-2 py-0.5 rounded-full font-medium transition-colors">
-            {delta}
-          </span>
-        )}
       </div>
     </div>
   );

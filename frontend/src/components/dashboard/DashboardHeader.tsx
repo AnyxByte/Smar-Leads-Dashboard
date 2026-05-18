@@ -67,7 +67,6 @@ export function DashboardHeader({
           icon={<TrendingUp size={15} />}
           iconBg="bg-violet-100 dark:bg-violet-950/50"
           iconColor="text-violet-700 dark:text-violet-400"
-          delta="+12%"
         />
         <StatCard
           label="Qualified"
@@ -75,7 +74,6 @@ export function DashboardHeader({
           icon={<UserCheck size={15} />}
           iconBg="bg-green-100 dark:bg-green-950/50"
           iconColor="text-green-700 dark:text-green-400"
-          delta="+5%"
         />
         <StatCard
           label="Contacted"

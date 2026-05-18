@@ -21,6 +21,7 @@ export default function Dashboard() {
     updateFilter,
     resetFilters,
     deleteLead,
+    fetchLeads
   } = useLeads();
 
   const [currentView, setCurrentView] = useState<ViewMode>("Dashboard");
@@ -43,6 +44,10 @@ export default function Dashboard() {
       setLastDispatchedSearch("");
     }
   }, [filters.search]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
   useEffect(() => {
     const delayTimer = setTimeout(() => {
