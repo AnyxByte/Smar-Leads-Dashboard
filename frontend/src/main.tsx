@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Dashboard from "./pages/Dashboard.tsx";
-// @ts-expect-error: side-effect import for CSS
 import "./index.css";
 import Landing from "./pages/Landing.tsx";
 import Auth from "./pages/Auth.tsx";
