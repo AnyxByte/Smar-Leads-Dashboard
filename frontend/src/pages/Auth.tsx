@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import toast from 'react-hot-toast';
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google"; 
+import { useTheme } from "@/context/ThemeContext"; // 🏆 Consume global theme context
 import {
   Zap,
   Eye,
@@ -15,6 +16,7 @@ import {
   Lock,
   User,
   ChevronRight,
+  Moon,
 } from "lucide-react";
 import LeftPanel from "@/components/auth/LeftPanel";
 import { useNavigate } from "react-router";
@@ -110,18 +112,18 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
   return (
     <div className="w-full">
       <div className="flex items-center gap-3 my-4">
-        <div className="flex-1 h-px bg-zinc-200" />
-        <span className="text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">
+        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800" />
+        <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-semibold uppercase tracking-wider">
           {labelAction}
         </span>
-        <div className="flex-1 h-px bg-zinc-200" />
+        <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800" />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <Button
           variant="outline"
           type="button"
           onClick={() => handleGoogleLogin()}
-          className="h-10 text-xs font-semibold gap-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all shadow-sm"
+          className="h-10 text-xs font-semibold gap-2 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl transition-all shadow-sm cursor-pointer"
         >
           <GoogleIcon /> Google
         </Button>
@@ -130,7 +132,7 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
           variant="outline"
           type="button"
           onClick={handleGitHubLogin} 
-          className="h-10 text-xs font-semibold gap-2 border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all shadow-sm"
+          className="h-10 text-xs font-semibold gap-2 border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 rounded-xl transition-all shadow-sm cursor-pointer"
         >
           <GitHubIcon /> GitHub
         </Button>
@@ -138,6 +140,7 @@ function SocialAuthGroup({ labelAction }: { labelAction: string }) {
     </div>
   );
 }
+
 interface FormPanelProps {
   mode: AuthMode;
   onSwitch: () => void;
@@ -166,11 +169,11 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
     if (/[0-9]/.test(pw)) score++;
     if (/[^A-Za-z0-9]/.test(pw)) score++;
     const map = [
-      { label: "", color: "bg-zinc-200" },
+      { label: "", color: "bg-zinc-200 dark:bg-zinc-800" },
       { label: "Weak", color: "bg-red-500", text: "text-red-500" },
       { label: "Fair", color: "bg-amber-500", text: "text-amber-500" },
       { label: "Good", color: "bg-blue-500", text: "text-blue-500" },
-      { label: "Strong", color: "bg-green-500", text: "text-green-600" },
+      { label: "Strong", color: "bg-green-500", text: "text-green-600 dark:text-green-400" },
     ];
     return { score, ...map[score] };
   };
@@ -219,39 +222,39 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
   return (
     <div className="flex flex-col w-full max-w-sm">
       {/* Header Info */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-zinc-900 mb-1.5 tracking-tight">
+      <div className="mb-4">
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50 mb-1.5 tracking-tight">
           {mode === "login" ? "Sign in to LeadFlow" : "Create your account"}
         </h1>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
           {mode === "login"
             ? "Don't have an account? "
             : "Already have an account? "}
           <button
             type="button"
             onClick={onSwitch}
-            className="text-violet-600 font-medium hover:text-violet-700 transition-colors"
+            className="text-violet-600 dark:text-violet-400 font-medium hover:text-violet-700 dark:hover:text-violet-300 transition-colors cursor-pointer"
           >
             {mode === "login" ? "Create one free" : "Sign in"}
           </button>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         {mode === "signup" && (
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
               Full name
             </label>
             <div className="relative">
               <User
                 size={15}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
               />
               <Input
                 placeholder="Rahul Kumar"
                 {...register("name", { required: "Full name is required" })}
-                className={`pl-9 h-10 rounded-xl border-zinc-200 ${errors.name ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
+                className={`pl-9 h-10 text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-xl ${errors.name ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
               />
             </div>
             {errors.name && (
@@ -264,13 +267,13 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
 
         {/* Email Field */}
         <div>
-          <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+          <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
             Email address
           </label>
           <div className="relative">
             <Mail
               size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
             />
             <Input
               type="email"
@@ -282,7 +285,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
                   message: "Enter a valid email address",
                 },
               })}
-              className={`pl-9 h-10 rounded-xl border-zinc-200 ${errors.email ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
+              className={`pl-9 h-10 text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-xl ${errors.email ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
             />
           </div>
           {errors.email && (
@@ -295,14 +298,14 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
         {/* Password Field */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-semibold text-zinc-700">
+            <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
               Password
             </label>
           </div>
           <div className="relative">
             <Lock
               size={15}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
             />
             <Input
               type={showPass ? "text" : "password"}
@@ -314,12 +317,12 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
                     ? { value: 8, message: "At least 8 characters required" }
                     : undefined,
               })}
-              className={`pl-9 pr-10 h-10 rounded-xl border-zinc-200 ${errors.password ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
+              className={`pl-9 pr-10 h-10 text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-xl ${errors.password ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
             />
             <button
               type="button"
               onClick={() => setShowPass((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors cursor-pointer"
             >
               {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
@@ -331,7 +334,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
                 {[1, 2, 3, 4].map((i) => (
                   <div
                     key={i}
-                    className={`h-1 flex-1 rounded-full transition-colors duration-300 ${i <= strength.score ? strength.color : "bg-zinc-200"}`}
+                    className={`h-1 flex-1 rounded-full transition-colors duration-300 ${i <= strength.score ? strength.color : "bg-zinc-200 dark:bg-zinc-800"}`}
                   />
                 ))}
               </div>
@@ -352,13 +355,13 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
         {/* Confirm Password Field */}
         {mode === "signup" && (
           <div>
-            <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+            <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Confirm password
             </label>
             <div className="relative">
               <Lock
                 size={15}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
               />
               <Input
                 type={showConf ? "text" : "password"}
@@ -368,12 +371,12 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
                   validate: (value) =>
                     value === passwordValue || "Passwords do not match",
                 })}
-                className={`pl-9 pr-10 h-10 rounded-xl border-zinc-200 ${errors.confirm ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
+                className={`pl-9 pr-10 h-10 text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-xl ${errors.confirm ? "border-red-400 focus-visible:ring-red-300" : "focus-visible:ring-violet-500"}`}
               />
               <button
                 type="button"
                 onClick={() => setShowConf((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors cursor-pointer"
               >
                 {showConf ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
@@ -394,7 +397,7 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full mt-5! h-10 bg-violet-600 hover:bg-violet-700 text-white gap-2 shadow-sm rounded-xl font-medium"
+          className="w-full mt-5! h-10 bg-violet-600 hover:bg-violet-700 text-white gap-2 shadow-sm rounded-xl font-medium cursor-pointer border-0"
         >
           {loading ? (
             <>
@@ -414,7 +417,6 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
         </Button>
       </form>
 
-      {/* ─── 3. PASS DYNAMIC LABELS CLEANLY TO UPDATED SUITE ─── */}
       <SocialAuthGroup
         labelAction={mode === "login" ? "or sign in with" : "or sign up with"}
       />
@@ -424,8 +426,9 @@ function AuthFormPanel({ mode, onSwitch }: FormPanelProps) {
 
 export default function AuthPage() {
   const [mode, setMode] = useState<AuthMode>("login");
-    const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
-    const navigate = useNavigate()
+  const { isDarkMode, toggleTheme } = useTheme(); // 🏆 Consume Theme controller rules
+  const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
+  const navigate = useNavigate();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -467,30 +470,55 @@ export default function AuthPage() {
     <>
       <style>{`@keyframes grow { from { width: 0%; } to { width: 100%; } }`}</style>
 
-      <div className="min-h-screen flex bg-white antialiased">
+      {/* 🏆 RESPONSIVE CHASSIS: Adapts canvas color scheme fluidly across breakpoints */}
+      <div className="min-h-screen flex bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 antialiased transition-colors duration-200">
         <LeftPanel />
 
-        <div className="flex-1 flex flex-col">
-          <div className="lg:hidden flex items-center gap-2.5 px-6 py-5 border-b border-zinc-100">
-            <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
-              <Zap size={15} className="text-white" />
+        <div className="flex-1 flex flex-col min-w-0">
+          
+          {/* Mobile Top Header Ribbon Branding */}
+          <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-900">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
+                <Zap size={15} className="text-white" />
+              </div>
+              <span className="text-[16px] font-semibold text-zinc-900 dark:text-white tracking-tight">
+                LeadFlow
+              </span>
             </div>
-            <span className="text-[16px] font-semibold text-zinc-900 tracking-tight">
-              LeadFlow
-            </span>
           </div>
 
-          <div className="flex justify-end px-6 pt-5 pb-2">
-            <div className="flex items-center gap-1 bg-zinc-100 rounded-lg p-1">
+          {/* 🏆 ACTION CONTROL BAR: Holds switcher and premium theme switch button */}
+          <div className="flex items-center justify-end gap-3 px-6 pt-6 pb-2">
+            
+            {/* 🌙 PURE MOON TOGGLE BUTTON */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              className="p-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-200 cursor-pointer"
+            >
+              <Moon 
+                size={14} 
+                className={`transition-all duration-300 ${
+                  isDarkMode 
+                    ? "text-violet-400 fill-violet-400 rotate-[-15deg] filter drop-shadow-[0_0_6px_rgba(167,139,250,0.5)]" 
+                    : "text-zinc-400 hover:text-zinc-700"
+                }`}
+              />
+            </button>
+
+            {/* Login / Sign Up View Toggle Slider Panel */}
+            <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-900 rounded-lg p-1 transition-colors">
               {(["login", "signup"] as AuthMode[]).map((m) => (
                 <button
                   key={m}
                   type="button"
                   onClick={() => setMode(m)}
-                  className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                  className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 cursor-pointer ${
                     mode === m
-                      ? "bg-white text-zinc-900 shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-700"
+                      ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-50"
+                      : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
                   }`}
                 >
                   {m === "login" ? "Sign in" : "Sign up"}
@@ -499,6 +527,7 @@ export default function AuthPage() {
             </div>
           </div>
 
+          {/* Form Content Anchor Sandbox */}
           <div className="flex-1 flex items-center justify-center px-6 py-4">
             <AuthFormPanel
               key={mode}
@@ -508,7 +537,6 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
-
     </>
   );
 }

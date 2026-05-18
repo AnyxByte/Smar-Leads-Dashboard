@@ -23,7 +23,7 @@ export default function Dashboard() {
     deleteLead,
   } = useLeads();
 
-  const [currentView, setCurrentView] = useState<ViewMode>("Dashboard"); 
+  const [currentView, setCurrentView] = useState<ViewMode>("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [search, setSearch] = useState(filters.search);
@@ -120,8 +120,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex antialiased">
-      {/* Sidebar gets synced to manage active link states dynamically */}
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex antialiased transition-colors duration-200">
       <Sidebar
         mobileOpen={sidebarOpen}
         onMobileClose={() => setSidebarOpen(false)}
@@ -133,10 +132,9 @@ export default function Dashboard() {
         <DashboardHeader setSidebarOpen={setSidebarOpen} stats={stats} />
 
         <main className="flex-1 px-4 sm:px-6 py-6">
-          {/* 🏆 DYNAMIC CONDITIONAL SWITCH VIEWS BLOCK */}
           {currentView === "Dashboard" ? (
-            /* ─── SCREEN VIEW A: LEADS PIPELINE DATAGRID ─── */
-            <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm animate-in fade-in duration-150">
+            /* 🏆 Added dark:bg-zinc-900 and dark:border-zinc-800 onto the primary datagrid board layout */
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm animate-in fade-in duration-150">
               <FilterControls
                 filteredCount={pagination?.totalLeads ?? leads.length}
                 search={search}
@@ -200,7 +198,6 @@ export default function Dashboard() {
               )}
             </div>
           ) : (
-            /* ─── SCREEN VIEW B: ACCOUNT SECURE SETTINGS ─── */
             <SettingsView />
           )}
         </main>

@@ -19,7 +19,6 @@ const leadFormValidationSchema = z.object({
     .min(1, "Email is required")
     .email("Enter a valid email address"),
   status: z.enum(["New", "Contacted", "Qualified", "Lost"]),
-
   source: z.enum(["Website", "Instagram", "Referral"], {
     message: "Source is required",
   }),
@@ -90,63 +89,66 @@ export default function LeadModal({
     }
   }, [open, initial, reset]);
 
- const onSubmit = async (data: LeadFormData) => {
-  setIsSubmitting(true);
-  try {
-    const token = localStorage.getItem("token");
+  const onSubmit = async (data: LeadFormData) => {
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem("token");
 
-    const endpoint = initial
-      ? `${API_BASE_URL}/leads/${initial.id}`
-      : `${API_BASE_URL}/leads`;
+      const endpoint = initial
+        ? `${API_BASE_URL}/leads/${initial.id}`
+        : `${API_BASE_URL}/leads`;
 
-    const method = initial ? "put" : "post";
+      const method = initial ? "put" : "post";
 
-    const response = await axios({
-      method,
-      url: endpoint,
-      data,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+      const response = await axios({
+        method,
+        url: endpoint,
+        data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (response.data.success) {
-      toast.success(
-        initial
-          ? "Lead optimized successfully!"
-          : "Lead registered into pipeline!",
-      );
-      
-      onSaveSuccess(); 
-      onClose();
+      if (response.data.success) {
+        toast.success(
+          initial
+            ? "Lead optimized successfully!"
+            : "Lead registered into pipeline!",
+        );
+        
+        onSaveSuccess(); 
+        onClose();
+      }
+    } catch (err: any) {
+      const serverError =
+        err.response?.data?.message ||
+        "Error";
+      toast.error(serverError);
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (err: any) {
-    const serverError =
-      err.response?.data?.message ||
-      "Error";
-    toast.error(serverError);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) =>
         e.target === e.currentTarget && !isSubmitting && onClose()
       }
     >
-      <div className="bg-white rounded-2xl border border-zinc-200 shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-150">
+      {/* 🏆 CHASSIS: Added dark:bg-zinc-900 and dark:border-zinc-800 card parameters */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-150 transition-colors">
+        
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800/80">
           <div>
-            <h2 className="text-base font-semibold text-zinc-900">
+            {/* 🏆 HEADING & SUBTITLE: Configured dark text tokens */}
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               {initial ? "Edit lead" : "Create new lead"}
             </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
               {initial
                 ? "Update the lead details below."
                 : "Fill in the details to add a lead."}
@@ -155,28 +157,28 @@ export default function LeadModal({
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 transition-colors disabled:opacity-50"
+            className="p-1.5 rounded-lg text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <X size={16} />
           </button>
         </div>
 
         {/* Form Container */}
-        {/* 🏆 Wired up react-hook-form handleSubmit wrapper */}
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Body */}
           <div className="px-6 py-5 space-y-4">
+            
             {/* Name Field */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                 Full name
               </label>
-              {/* 🏆 Registered native text input parameters */}
+              {/* 🏆 INPUT COMPONENT: Injected dark placeholder, text, and field background variables */}
               <Input
                 disabled={isSubmitting}
                 placeholder="e.g. Rahul Kumar"
                 {...register("name")}
-                className={`rounded-xl border-zinc-200 h-10 ${
+                className={`rounded-xl border-zinc-200 dark:border-zinc-800 h-10 text-zinc-900 dark:text-white bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 ${
                   errors.name
                     ? "border-red-400 focus-visible:ring-red-400"
                     : "focus-visible:ring-violet-500"
@@ -191,16 +193,16 @@ export default function LeadModal({
 
             {/* Email Field */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                 Email address
               </label>
-              {/* 🏆 Registered native email input parameters */}
+              {/* 🏆 INPUT COMPONENT: Fixed text color matching to prevent dark mode typing vanishing */}
               <Input
                 type="email"
                 disabled={isSubmitting}
                 placeholder="e.g. rahul@example.com"
                 {...register("email")}
-                className={`rounded-xl border-zinc-200 h-10 ${
+                className={`rounded-xl border-zinc-200 dark:border-zinc-800 h-10 text-zinc-900 dark:text-white bg-white dark:bg-zinc-950 placeholder-zinc-400 dark:placeholder-zinc-500 ${
                   errors.email
                     ? "border-red-400 focus-visible:ring-red-400"
                     : "focus-visible:ring-violet-500"
@@ -217,10 +219,9 @@ export default function LeadModal({
             <div className="grid grid-cols-2 gap-4">
               {/* Status Field */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-zinc-700">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   Status
                 </label>
-                {/* 🏆 Used <Controller /> component to map non-native dropdown controls cleanly */}
                 <Controller
                   name="status"
                   control={control}
@@ -238,10 +239,9 @@ export default function LeadModal({
 
               {/* Source Field */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-zinc-700">
+                <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   Source
                 </label>
-                {/* 🏆 Used <Controller /> component to map non-native dropdown controls cleanly */}
                 <Controller
                   name="source"
                   control={control}
@@ -265,20 +265,20 @@ export default function LeadModal({
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-zinc-100">
+          <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/20 dark:bg-zinc-950/20 transition-colors">
             <Button
               variant="outline"
               type="button" 
               onClick={onClose}
               disabled={isSubmitting}
-              className="rounded-xl px-4 text-zinc-600"
+              className="rounded-xl px-4 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-4 font-medium shadow-sm min-w-[100px]"
+              className="bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-4 font-medium shadow-sm min-w-[100px] border-0 cursor-pointer"
             >
               {isSubmitting ? (
                 <div className="flex items-center gap-1.5">

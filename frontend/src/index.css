@@ -1,2 +1,21 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
+@utility theme-transition {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+body {
+  background-color: #ffffff;
+  color: #18181b;
+  @button theme-transition;
+}
+
+html.dark body {
+  background-color: #09090b;
+  color: #fafafa;
+}
