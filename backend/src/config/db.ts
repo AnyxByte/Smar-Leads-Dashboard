@@ -2,7 +2,14 @@ import mongoose from "mongoose";
 
 export const connectDB = async (): Promise<void> => {
   try {
-    await mongoose.connect(process.env.MONGO_URI || "", {
+
+    const mongoURI = process.env.MONGO_URI;
+    
+    if (!mongoURI) {
+      throw new Error("MONGO_URI environment variable is missing inside system logs.");
+    }
+    
+    await mongoose.connect(mongoURI || "", {
       dbName: "InternProj",
     });
     console.log(`MongoDB Connected`);
