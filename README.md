@@ -8,6 +8,7 @@ A full-stack Lead Management Dashboard built with the MERN stack, clean architec
 
 - **Frontend:** [https://smart-leads-dashboard-eta.vercel.app/](https://smart-leads-dashboard-eta.vercel.app/)
 - **Backend API:** [https://smart-leads-dashboard-api.onrender.com](https://smart-leads-dashboard-upx5.onrender.com)
+- > ⚠️ Hosted on Render's free tier — the server may take **50–60 seconds** to spin up on the first request if inactive.
 
 ---
 
