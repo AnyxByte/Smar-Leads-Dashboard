@@ -9,17 +9,15 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const CLIENT_URL = process.env.CLIENT_URL || "";
 
 app.use(
   cors({
-    origin: [
-      // "http://localhost:5173", 
-      "https://smart-leads-dashboard-eta.vercel.app", 
-    ],
+    origin: [CLIENT_URL],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, 
-  })
+    credentials: true,
+  }),
 );
 
 app.use(express.json());
