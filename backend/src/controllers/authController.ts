@@ -286,3 +286,52 @@ export const googleAuth = async (
     });
   }
 };
+
+export const updateUserProfile = async (req: Request, res: Response) => {
+  try {
+    // 1. req.user._id is populated by your JWT authentication middleware
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User account not found in system index.",
+      });
+    }
+
+    const { name, email } = req.body;
+
+    if (email && email !== user.email) {
+      const emailExists = await User.findOne({ email: email.toLowerCase() });
+      if (emailExists) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "This email address is already registered to another account.",
+        });
+      }
+      user.email = email.toLowerCase();
+    }
+
+    if (name) user.name = name.trim();
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully.",
+      data: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+      },
+    });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error during profile modifications execution.",
+    });
+  }
+};

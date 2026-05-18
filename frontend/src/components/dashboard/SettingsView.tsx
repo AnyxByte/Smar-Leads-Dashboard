@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { Shield, User, Mail, KeyRound, Save } from "lucide-react";
+import axios from "axios";
 
 export default function SettingsView() {
   const [profile, setProfile] = useState({
@@ -34,24 +35,33 @@ export default function SettingsView() {
     setIsSaving(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      const token = localStorage.getItem("token");
+      const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
-      const storedUser = localStorage.getItem("user");
-      const currentUserObj = storedUser ? JSON.parse(storedUser) : {};
+      // 🏆 HIT THE LIVE ENDPOINT
+      const response = await axios.put(
+        `${API_BASE_URL}/auth/profile`,
+        {
+          name: profile.name,
+          email: profile.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-      const updatedUserObj = {
-        ...currentUserObj,
-        name: profile.name,
-        email: profile.email,
-      };
+      if (response.data.success) {
+        localStorage.setItem("user", JSON.stringify(response.data.data));
 
-      localStorage.setItem("user", JSON.stringify(updatedUserObj));
-      toast.success("Profile records updated successfully!");
-
-      // Broadcast event to force Sidebar name update instantly
-      window.dispatchEvent(new Event("storage"));
-    } catch (err) {
-      toast.error("Failed to sync profile changes.");
+        toast.success("Profile records synchronized successfully!");
+        window.dispatchEvent(new Event("storage"));
+      }
+    } catch (err: any) {
+      const serverMsg =
+        err.response?.data?.message || "Failed to sync profile changes.";
+      toast.error(serverMsg);
     } finally {
       setIsSaving(false);
     }
