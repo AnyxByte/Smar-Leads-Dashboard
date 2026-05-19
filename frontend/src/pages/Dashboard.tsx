@@ -20,7 +20,7 @@ export default function Dashboard() {
     isLoading,
     updateFilter,
     deleteLead,
-    fetchLeads
+    fetchLeads,
   } = useLeads();
 
   const [currentView, setCurrentView] = useState<ViewMode>("Dashboard");
@@ -137,7 +137,6 @@ export default function Dashboard() {
 
         <main className="flex-1 px-4 sm:px-6 py-6">
           {currentView === "Dashboard" ? (
-         
             <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm animate-in fade-in duration-150">
               <FilterControls
                 filteredCount={pagination?.totalLeads ?? leads.length}
@@ -208,6 +207,7 @@ export default function Dashboard() {
       </div>
 
       <LeadModal
+        key={editLead?.id ?? "new"}
         open={modalOpen}
         onClose={() => {
           setModalOpen(false);

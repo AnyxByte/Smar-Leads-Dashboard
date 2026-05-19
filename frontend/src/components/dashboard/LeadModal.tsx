@@ -1,13 +1,13 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form"; 
-import { zodResolver } from "@hookform/resolvers/zod"; 
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { DashboardSelect } from "./DashboardSelect";
 import axios from "axios";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const leadFormValidationSchema = z.object({
   name: z
@@ -51,10 +51,18 @@ export default function LeadModal({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
+  // Add these two state variables at the top of the component
+  const [statusValue, setStatusValue] = useState<LeadFormData["status"]>(
+    () => initial?.status ?? "New",
+  );
+  const [sourceValue, setSourceValue] = useState<LeadFormData["source"]>(
+    () => initial?.source ?? "Website",
+  );
+
   const {
     register,
     handleSubmit,
-    control, 
+    control,
     reset,
     formState: { errors },
   } = useForm<LeadFormData>({
@@ -77,14 +85,21 @@ export default function LeadModal({
     label: s,
   }));
 
+  // Update your useEffect
   useEffect(() => {
     if (open) {
+      const status = initial?.status ?? "New";
+      const source = initial?.source ?? "Website";
+
       reset({
         name: initial?.name ?? "",
         email: initial?.email ?? "",
-        status: initial?.status ?? "New",
-        source: initial?.source ?? "Website",
+        status,
+        source,
       });
+
+      setStatusValue(status); // 👈
+      setSourceValue(source); // 👈
       setIsSubmitting(false);
     }
   }, [open, initial, reset]);
@@ -111,18 +126,14 @@ export default function LeadModal({
 
       if (response.data.success) {
         toast.success(
-          initial
-            ? "Lead updated successfully!"
-            : "Lead added successfully!",
+          initial ? "Lead updated successfully!" : "Lead added successfully!",
         );
-        
-        onSaveSuccess(); 
+
+        onSaveSuccess();
         onClose();
       }
     } catch (err: any) {
-      const serverError =
-        err.response?.data?.message ||
-        "Error";
+      const serverError = err.response?.data?.message || "Error";
       toast.error(serverError);
     } finally {
       setIsSubmitting(false);
@@ -139,7 +150,6 @@ export default function LeadModal({
       }
     >
       <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-150 transition-colors">
-        
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800/80">
           <div>
             <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
@@ -161,9 +171,7 @@ export default function LeadModal({
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-
           <div className="px-6 py-5 space-y-4">
-            
             <div>
               <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1.5">
                 Full name
@@ -208,7 +216,6 @@ export default function LeadModal({
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-      
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   Status
@@ -218,8 +225,11 @@ export default function LeadModal({
                   control={control}
                   render={({ field }) => (
                     <DashboardSelect
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      value={statusValue}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        setStatusValue(val as LeadFormData["status"]);
+                      }}
                       options={statusOptions}
                       widthClass="w-full"
                       placeholder="Select status"
@@ -237,8 +247,11 @@ export default function LeadModal({
                   control={control}
                   render={({ field }) => (
                     <DashboardSelect
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      value={sourceValue}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        setSourceValue(val as LeadFormData["source"]);
+                      }}
                       options={sourceOptions}
                       widthClass="w-full"
                       placeholder="Select source"
@@ -257,7 +270,7 @@ export default function LeadModal({
           <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/20 dark:bg-zinc-950/20 transition-colors">
             <Button
               variant="outline"
-              type="button" 
+              type="button"
               onClick={onClose}
               disabled={isSubmitting}
               className="rounded-xl px-4 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer"
